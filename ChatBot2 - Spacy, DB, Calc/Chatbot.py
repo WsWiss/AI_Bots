@@ -31,7 +31,7 @@ except OSError:
     nlp = spacy.load("ru_core_news_sm")
 
 # Конфигурация
-API_KEY = "-"  # Замените на действительный ключ OpenWeatherMap
+API_KEY = "7dd0df264a23133ea2050760446d22d5"  # Замените на действительный ключ OpenWeatherMap
 
 # Словарь шаблонов и ответов
 RESPONSES = {
@@ -417,7 +417,10 @@ async def process_user_input(user_input: str, current_category: str = None, db: 
     # Погода
     weather_match = re.search(r"погода\s+(?:в|на)\s+(.+)", user_input)
     if weather_match:
-        city = weather_match.group(1)
+        city_raw = weather_match.group(1).rstrip('.,!?')
+        city_parts = city_raw.split()
+        city_lemmas = [to_nominative(word).capitalize() for word in city_parts]
+        city = ' '.join(city_lemmas)
         weather = WeatherAssistant()
         weather_result = await weather.get_weather(city)
         return None, weather_result, False
