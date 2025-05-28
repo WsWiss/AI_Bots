@@ -1,0 +1,188 @@
+version: "3.1"
+
+stories:
+- story: Приветствие
+  steps:
+    - intent: greet
+    - action: action_load_user_data
+    - action: utter_greet
+
+- story: Прощание
+  steps:
+    - intent: goodbye
+    - action: action_save_user_data
+    - action: utter_goodbye
+
+- story: Запрос помощи
+  steps:
+    - intent: help
+    - action: utter_help
+
+- story: Запрос погоды
+  steps:
+    - intent: weather
+    - action: action_weather
+
+- story: Перевод текста
+  steps:
+    - intent: translate
+    - action: action_translate
+
+- story: Вычисления
+  steps:
+    - intent: calculate
+    - action: action_calculate
+
+- story: Запрос времени
+  steps:
+    - intent: datetime
+    - action: action_datetime
+
+- story: Рассказ анекдота
+  steps:
+    - intent: joke
+    - action: utter_joke
+
+- story: Узнать имя бота
+  steps:
+    - intent: name
+    - action: utter_name
+
+- story: Реакция на комплимент
+  steps:
+    - intent: compliment
+    - action: utter_compliment_response
+
+- story: Обсуждение настроения
+  steps:
+    - intent: mood
+    - action: utter_mood_response
+
+- story: Ответ на благодарность
+  steps:
+    - intent: thanks
+    - action: utter_thanks_response
+
+- story: Поиск в интернете
+  steps:
+    - intent: search
+    - action: action_search
+
+- story: Цитата дня
+  steps:
+    - intent: quote
+    - action: utter_quote
+
+- story: Совет дня
+  steps:
+    - intent: advice
+    - action: utter_advice
+
+- story: Позитивный настрой
+  steps:
+    - intent: mood_positive
+    - action: action_analyze_sentiment
+    - action: utter_mood_positive
+
+- story: Негативный настрой
+  steps:
+    - intent: mood_negative
+    - action: action_analyze_sentiment
+    - action: utter_mood_negative
+
+- story: Нейтральный настрой
+  steps:
+    - intent: mood_neutral
+    - action: action_analyze_sentiment
+    - action: utter_mood_neutral
+
+- story: Обсуждение времени года
+  steps:
+    - intent: season
+    - action: utter_season_response
+
+- story: Обновление города
+  steps:
+    - intent: set_city
+    - action: action_save_user_data
+    - action: utter_confirm_city
+
+- story: Show users table
+  steps:
+  - intent: show_users_table
+  - action: action_show_all_users
+  - action: utter_show_users_confirm
+
+- story: Управление задачами
+  steps:
+    - intent: add_task
+    - action: action_add_task
+    - intent: list_tasks
+    - action: action_list_tasks
+    - intent: delete_task
+    - action: action_delete_task
+    - action: utter_task_deleted
+
+
+- story: Успешная конвертация валюты
+  steps:
+    - intent: convert_currency
+      entities:
+        - amount: "100"
+        - from_currency: "USD"
+        - to_currency: "EUR"
+    - action: action_convert_currency
+    - slot_was_set:
+        - result: "100 USD = 93.50 EUR"
+    - action: utter_currency_result
+
+- story: Ошибка конвертации (неверная валюта)
+  steps:
+    - intent: convert_currency
+      entities:
+        - amount: "500"
+        - from_currency: "XYZ"  # Несуществующий код
+    - action: action_convert_currency
+    - slot_was_set:
+        - result: null
+    - action: utter_currency_error
+    - intent: convert_currency  # Повторный корректный запрос
+      entities:
+        - amount: "500"
+        - from_currency: "USD"
+        - to_currency: "RUB"
+    - action: action_convert_currency
+    - slot_was_set:
+        - result: "500 USD = 46500.00 RUB"
+    - action: utter_currency_result
+
+- story: Конвертация с уточнением параметров
+  steps:
+    - intent: convert_currency
+      entities:
+        - amount: "200"
+    - action: utter_ask_from_currency
+    - intent: specify_currency
+      entities:
+        - from_currency: "GBP"
+    - action: utter_ask_to_currency
+    - intent: specify_currency
+      entities:
+        - to_currency: "JPY"
+    - action: action_convert_currency
+    - action: utter_currency_result
+
+- story: Персональный ассистент (комбинированный)
+  steps:
+    - intent: greet
+    - action: action_load_user_data
+    - action: utter_greet
+    - intent: add_task
+    - action: action_add_task
+    - intent: convert_currency
+    - action: action_convert_currency
+    - intent: list_tasks
+    - action: action_list_tasks
+    - intent: goodbye
+    - action: action_save_user_data
+    - action: utter_goodbye
